@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OOP2015CPP", "OOP2015CPP\OOP2015CPP.vcxproj", "{593B93BC-4867-4815-9440-AAB23F526F9A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{859B3FB4-72AB-47AF-BFAD-08C289514785}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{593B93BC-4867-4815-9440-AAB23F526F9A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{593B93BC-4867-4815-9440-AAB23F526F9A}.Debug|Win32.Build.0 = Debug|Win32
+		{593B93BC-4867-4815-9440-AAB23F526F9A}.Release|Win32.ActiveCfg = Release|Win32
+		{593B93BC-4867-4815-9440-AAB23F526F9A}.Release|Win32.Build.0 = Release|Win32
+		{859B3FB4-72AB-47AF-BFAD-08C289514785}.Debug|Win32.ActiveCfg = Debug|Win32
+		{859B3FB4-72AB-47AF-BFAD-08C289514785}.Debug|Win32.Build.0 = Debug|Win32
+		{859B3FB4-72AB-47AF-BFAD-08C289514785}.Release|Win32.ActiveCfg = Release|Win32
+		{859B3FB4-72AB-47AF-BFAD-08C289514785}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
