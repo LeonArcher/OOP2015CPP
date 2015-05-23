@@ -48,16 +48,20 @@ public:
 	template < class C >
     void add( const std::string & id )
     {
-        typename FactoryMap::iterator it = _factory.find( id );
-        if ( it == _factory.end() )
-            _factory[ id ] = new ShapeCreator<C>();
+        typename FactoryMap::iterator it = m_factory.find( id );
+        if ( it == m_factory.end() ) {
+            m_factory[ id ] = new ShapeCreator<C>();
+			m_counter[ id ] = 0;
+		}
     }
 
     Shape * create_random( const std::string & id )
     {
-        typename FactoryMap::iterator it = _factory.find( id );
-        if ( it != _factory.end() )
+        typename FactoryMap::iterator it = m_factory.find( id );
+        if ( it != m_factory.end() ) {
+			++m_counter[ id ];
             return it->second->create_random();
+		}
         return 0;
     }
 
@@ -67,5 +71,7 @@ public:
 protected:
 
     typedef std::map< std::string, ShapeCreatorInterface * > FactoryMap;
-    FactoryMap _factory;
+    FactoryMap m_factory;
+
+	std::map< std::string, int > m_counter; // счетчик созданных фабрикой объектов
 };
