@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Factory.hpp" />
     <ClInclude Include="Shapes.hpp" />
     <ClInclude Include="XList.hpp" />
   </ItemGroup>
