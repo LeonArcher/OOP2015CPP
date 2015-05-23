@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-template<typename T>
+template< typename T >
 struct Element
 {
 	Element * next;
@@ -13,16 +13,16 @@ struct Element
 
 // итератор списка - для удобного перебора всех элементов списка
 
-template <class T>
+template < class T >
 class XList_iterator
 {
 public:
 
-	XList_iterator(Element<T> * elem) : m_node_ptr(elem)
+	XList_iterator( Element< T > * elem ) : m_node_ptr( elem )
 	{
 	}
 
-	T& operator * ()
+	T & operator * ()
 	{
 		return m_node_ptr->val;
 	}
@@ -33,10 +33,10 @@ public:
 		m_node_ptr = m_node_ptr->next;
 	}
 
-	XList_iterator operator ++ (int)
+	XList_iterator operator ++ ( int )
 	{
-		XList_iterator iter(*this);
-		++(*this);
+		XList_iterator iter( *this );
+		++( *this );
 		return iter;
 	}
 
@@ -46,41 +46,49 @@ public:
 		m_node_ptr = m_node_ptr->prev;
 	}
 
-	XList_iterator operator -- (int)
+	XList_iterator operator -- ( int )
 	{
-		XList_iterator iter(*this);
-		--(*this);
+		XList_iterator iter( *this );
+		--( *this );
 		return iter;
 	}
 
-	bool operator == (XList_iterator const& i)
+	XList_iterator operator+( int offset )
+    {
+		XList_iterator iter( *this );
+		for( int i = 0; i < offset; ++i )
+			++iter;
+        return iter; 
+    }
+
+	bool operator == ( XList_iterator const& i )
 	{
 		return m_node_ptr == i.m_node_ptr;
 	}
 
-	bool operator != (XList_iterator const& i)
+	bool operator != ( XList_iterator const& i )
 	{
-		return !(*this == i);
+		return !( *this == i );
 	}
 
 private:
 
-	Element<T> * m_node_ptr;
+	Element< T > * m_node_ptr;
 };
 
 
 
-template<typename T>
+template< typename T >
 class XList
 {
 public:
 
-	XList_iterator<T> Begin() { return XList_iterator<T>(m_head); }
-	XList_iterator<T> End() { return XList_iterator<T>(m_end); }
+	XList_iterator< T > Begin() const { return XList_iterator< T >( m_head ); }
+	XList_iterator< T > End() const { return XList_iterator< T >( m_end ); }
 
-	void PushBack(const T & elem)
+	void PushBack( const T & elem )
 	{
-		Element<T> * tmp = new Element<T>();
+		Element< T > * tmp = new Element< T >();
 
 		tmp->val = elem;
 		tmp->prev = m_end;
@@ -94,9 +102,9 @@ public:
 		m_end = tmp;
 	}
 
-	void PushFront(const T & elem)
+	void PushFront( const T & elem )
 	{
-		Element<T> * tmp = new Element<T>();
+		Element< T > * tmp = new Element< T >();
 
 		tmp->val = elem;
 		tmp->prev = nullptr;
@@ -113,8 +121,8 @@ public:
 	void PopBack()
 	{
 		assert( m_end != nullptr ); // для скорости работы не проверяем список на пустоту в release-версии
-		Element<T> * tmp = m_end->prev;
-		if(tmp != nullptr)
+		Element< T > * tmp = m_end->prev;
+		if( tmp != nullptr )
 			tmp->next = nullptr;
 
 		delete m_end;
@@ -124,7 +132,7 @@ public:
 	void PopFront()
 	{
 		assert( m_end != nullptr );
-		Element<T> * tmp = m_head->next;
+		Element< T > * tmp = m_head->next;
 		if(tmp != nullptr)
 			tmp->prev = nullptr;
 
@@ -144,7 +152,7 @@ public:
 
 		int length = 1;
 
-		for( Element<T> * tmp = m_head; tmp != m_end; tmp = tmp->next )
+		for( Element< T > * tmp = m_head; tmp != m_end; tmp = tmp->next )
 		{
 			++length;
 		}
@@ -154,7 +162,7 @@ public:
 
 	void Clear()
 	{
-		Element<T> * tmp;
+		Element< T > * tmp;
 		while( m_head != m_end )
 		{
 			tmp = m_head->next;
@@ -189,7 +197,7 @@ public:
 		m_head = nullptr;
 		m_end = nullptr;
 
-		for( XList_iterator<T> iter = other.Begin(); iter != other.End(); ++iter )
+		for( XList_iterator< T > iter = other.Begin(); iter != other.End(); ++iter )
 			this->PushBack( *iter );
 
 		this->PushBack( *( other.End() ) );
@@ -199,6 +207,6 @@ public:
 
 private:
 
-	Element<T> * m_head;
-	Element<T> * m_end;
+	Element< T > * m_head;
+	Element< T > * m_end;
 };

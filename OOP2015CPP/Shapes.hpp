@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string>
 
+#include <random>
+#include <chrono>
+
 #include "Base.h"
 #include "XList.hpp"
 
@@ -15,12 +18,17 @@ public:
 
 	static int GetCount() { return m_count; }
 
+	virtual void RandomizeParameters() = 0; // инициализируем все параметры случайными числами (допустимыми величинами)
+
 protected:
 
 	static int m_count;
+
+	static std::mt19937 m_generator; // √ѕ—„ ¬ихрь ћерсенна
 };
 
 int Shape::m_count = 0;
+std::mt19937 Shape::m_generator = std::mt19937( std::chrono::system_clock::now().time_since_epoch().count() ); // начальна€ рандомизаци€ генератора
 
 
 class Point : public Shape, public Printable
@@ -32,6 +40,13 @@ public:
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
 		where << "Point '" << m_name << "'\nX-coordinate: " << m_x << "\nY-coordinate: " << m_y << '\n';
+	}
+
+	virtual void RandomizeParameters()
+	{
+		std::uniform_real_distribution< float > distr( -1e10, 1e10 ); // интервал равномерного распределени€ координат точки
+		m_x = distr( m_generator );
+		m_y = distr( m_generator );
 	}
 
 	float m_x;
@@ -58,6 +73,14 @@ public:
 		where << "Square: " << M_PI * m_radius * m_radius << '\n';
 	}
 
+	virtual void RandomizeParameters()
+	{
+		std::uniform_real_distribution< float > distr( 1e-10, 1e10 ); // интервал равномерного распределени€ радиуса круга
+		m_radius = distr( m_generator );
+
+		m_center.RandomizeParameters();
+	}
+
 private:
 
 	Point m_center;
@@ -81,6 +104,16 @@ public:
 		where << "Square: " << Distance( Point( m_p1.m_x, m_p2.m_y ), m_p2 ) * Distance( Point( m_p1.m_x, m_p2.m_y ), m_p1 ) << '\n';
 	}
 
+	virtual void RandomizeParameters()
+	{
+		m_p1.RandomizeParameters();
+		m_p2.RandomizeParameters();
+
+		// исключаем расположение точек на одной пр€мой, параллельной одной из осей координат
+		while( m_p1.m_x == m_p2.m_x || m_p1.m_y == m_p2.m_y )
+			m_p2.RandomizeParameters();
+	}
+
 private:
 
 	Point m_p1;
@@ -98,6 +131,39 @@ public:
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
 		where << "Polyline '" << m_name << "'\nCoordinates: ";
+		
+		float length = 0;
+
+		for( XList_iterator<Point> iter = m_coords.Begin(); iter != m_coords.End(); ++iter )
+		{
+			where << '(' << ( *iter ).m_x << "; " << ( *iter ).m_y << ") ";
+			length += Distance( *iter, *( iter + 1 ) );
+		}
+		where << '(' << ( *m_coords.End() ).m_x << "; " << ( *m_coords.End() ).m_y << ")\n";
+
+		where << "Length: " << length << '\n';
+	}
+
+	virtual void RandomizeParameters()
+	{
+		m_coords.Clear();
+
+		std::uniform_int_distribution< int > distr( 1, 100 );
+		int segment_count = distr( m_generator );
+		Point p;
+
+		p.RandomizeParameters();
+		this->AddPoint( p );
+
+		for( int i = 0; i < segment_count; ++i )
+		{
+			p.RandomizeParameters();
+
+			while( p.m_x == ( *m_coords.End() ).m_x && p.m_y == ( *m_coords.End() ).m_y )
+				p.RandomizeParameters();
+
+			this->AddPoint( p );
+		}
 	}
 
 	void AddPoint( const Point & _point ) {	m_coords.PushBack( _point ); }
@@ -117,6 +183,41 @@ public:
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
+		where << "Polygon '" << m_name << "'\nCoordinates: ";
+		
+		float perimeter = 0;
+
+		for( XList_iterator<Point> iter = m_coords.Begin(); iter != m_coords.End(); ++iter )
+		{
+			where << '(' << ( *iter ).m_x << "; " << ( *iter ).m_y << ") ";
+			perimeter += Distance( *iter, *( iter + 1 ) );
+		}
+		where << '(' << ( *m_coords.End() ).m_x << "; " << ( *m_coords.End() ).m_y << ")\n";
+
+		where << "Perimeter: " << perimeter << '\n';
+	}
+
+	virtual void RandomizeParameters()
+	{
+		m_coords.Clear();
+
+		std::uniform_int_distribution< int > distr( 3, 100 );
+		int edge_count = distr( m_generator );
+		Point p0, p;
+
+		p0.RandomizeParameters();
+		this->AddPoint( p0 );
+
+		// при заполнении массива вершин многоугольника возможность пересечений не учитываетс€
+		for( int i = 1; i < edge_count; ++i )
+		{
+			p.RandomizeParameters();
+
+			while( p.m_x == ( *m_coords.End() ).m_x && p.m_y == ( *m_coords.End() ).m_y )
+				p.RandomizeParameters();
+
+			this->AddPoint( p );
+		}
 	}
 
 	void AddPoint( const Point & _point ) {	m_coords.PushBack( _point ); }
