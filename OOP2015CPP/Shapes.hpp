@@ -66,7 +66,7 @@ class Circle : public Shape, public Printable
 public:
 
 	Circle( Point & center = Point(), float radius = 1.0f ) : m_center( center ), m_radius( radius ) { ++m_count; }
-	Circle() { --m_count; }
+	~Circle() { --m_count; }
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
