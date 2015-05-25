@@ -16,11 +16,11 @@ class Shape : virtual public Named
 {
 public:
 
-	Shape() { ++m_count; }
-	Shape( Shape & ) { ++m_count; }
-	virtual ~Shape() { --m_count; }
+	Shape() { ++sm_count; }
+	Shape( Shape & ) { ++sm_count; }
+	virtual ~Shape() { --sm_count; }
 
-	static int GetCount() { return m_count; }
+	static int GetCount() { return sm_count; }
 
 	// этой функции тут быть не должно, но без нее вызывается функция RandomizeParameters, несмотря на обращение к Print через Printable*
 	virtual void Print( std::ostream & where = std::cout ) const = 0;
@@ -29,12 +29,12 @@ public:
 
 protected:
 
-	static int m_count;
+	static int sm_count;
 
 	static std::mt19937 m_generator; // ГПСЧ Вихрь Мерсенна
 };
 
-int Shape::m_count = 0;
+int Shape::sm_count = 0;
 std::mt19937 Shape::m_generator = std::mt19937( static_cast< unsigned int >( std::chrono::system_clock::now().time_since_epoch().count() ) ); // начальная рандомизация генератора
 
 
