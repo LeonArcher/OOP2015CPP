@@ -115,7 +115,12 @@ namespace UnitTests
 			Assert::AreEqual( Shape::GetCount(), 0 );
 
 			Factory shape_factory;
-			shape_factory.Init();
+			
+			shape_factory.Add< Point >( "Point" );
+			shape_factory.Add< Circle >( "Circle" );
+			shape_factory.Add< Rect >( "Rect" );
+			shape_factory.Add< Polyline >( "Polyline" );
+			shape_factory.Add< Polygon >( "Polygon" );
 
 			Shape * ptr = shape_factory.CreateRandom( "Point" );
 
