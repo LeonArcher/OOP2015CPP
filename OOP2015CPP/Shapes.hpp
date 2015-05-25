@@ -17,7 +17,7 @@ class Shape : virtual public Named
 public:
 
 	Shape() { ++m_count; }
-	Shape( Shape & other ) { ++m_count; }
+	Shape( Shape & ) { ++m_count; }
 	virtual ~Shape() { --m_count; }
 
 	static int GetCount() { return m_count; }
@@ -35,7 +35,7 @@ protected:
 };
 
 int Shape::m_count = 0;
-std::mt19937 Shape::m_generator = std::mt19937( std::chrono::system_clock::now().time_since_epoch().count() ); // начальная рандомизация генератора
+std::mt19937 Shape::m_generator = std::mt19937( static_cast< unsigned int >( std::chrono::system_clock::now().time_since_epoch().count() ) ); // начальная рандомизация генератора
 
 
 class Point : public Shape, public Printable
@@ -71,11 +71,17 @@ class Circle : public Shape, public Printable
 {
 public:
 
-	Circle( Point & center = Point(), float radius = 1.0f ) : m_center( center ), m_radius( radius ) {}
+	Circle()
+	{
+		m_center = Point();
+		m_radius = 1.0f;
+	}
+
+	Circle( Point & center, float radius ) : m_center( center ), m_radius( radius ) {}
 
 	virtual void RandomizeParameters()
 	{
-		std::uniform_real_distribution< float > distr( 1e-10, 1e10 ); // интервал равномерного распределения радиуса круга
+		std::uniform_real_distribution< float > distr( (float)1e-10, (float)1e10 ); // интервал равномерного распределения радиуса круга
 		m_radius = distr( m_generator );
 
 		m_center.RandomizeParameters();
@@ -99,7 +105,13 @@ class Rect : public Shape, public Printable
 {
 public:
 
-	Rect( Point & point1 = Point( 0.0f, 0.0f ), Point & point2 = Point( 1.0f, 1.0f ) ) : m_p1( point1 ), m_p2( point2 )
+	Rect()
+	{
+		m_p1 = Point( 0.0f, 0.0f );
+		m_p2 = Point( 1.0f, 1.0f );
+	}
+
+	Rect( Point & point1, Point & point2  ) : m_p1( point1 ), m_p2( point2 )
 	{
 		if( m_p1.m_x == m_p2.m_x || m_p1.m_y == m_p2.m_y )
 			throw std::exception( "Can't create rectangle with zero square." );

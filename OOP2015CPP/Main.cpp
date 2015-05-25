@@ -15,7 +15,7 @@ int main()
 
 	XList< Shape * > figures;
 
-	std::mt19937 generator( std::chrono::system_clock::now().time_since_epoch().count() ); // для случайного выбора типа фигуры
+	std::mt19937 generator( static_cast< unsigned int >( std::chrono::system_clock::now().time_since_epoch().count() ) ); // для случайного выбора типа фигуры
 	std::uniform_int_distribution< int > distr( 0, 4 );
 
 	std::map< int, std::string > figure_type;
