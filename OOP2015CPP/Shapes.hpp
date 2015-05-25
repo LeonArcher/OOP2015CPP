@@ -99,7 +99,11 @@ class Rect : public Shape, public Printable
 {
 public:
 
-	Rect( Point & point1 = Point( 0.0f, 0.0f ), Point & point2 = Point( 1.0f, 1.0f ) ) : m_p1( point1 ), m_p2( point2 ) {}
+	Rect( Point & point1 = Point( 0.0f, 0.0f ), Point & point2 = Point( 1.0f, 1.0f ) ) : m_p1( point1 ), m_p2( point2 )
+	{
+		if( m_p1.m_x == m_p2.m_x || m_p1.m_y == m_p2.m_y )
+			throw std::exception( "Can't create rectangle with zero square." );
+	}
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
@@ -116,9 +120,8 @@ public:
 		m_p1.RandomizeParameters();
 		m_p2.RandomizeParameters();
 
-		// исключаем расположение точек на одной прямой, параллельной одной из осей координат
-		while( m_p1.m_x == m_p2.m_x || m_p1.m_y == m_p2.m_y )
-			m_p2.RandomizeParameters();
+		if( m_p1.m_x == m_p2.m_x || m_p1.m_y == m_p2.m_y )
+			throw std::exception( "Can't create rectangle with zero square." );
 	}
 
 private:

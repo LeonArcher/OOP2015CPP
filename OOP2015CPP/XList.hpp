@@ -24,12 +24,17 @@ public:
 
 	T & operator * ()
 	{
+		if( m_node_ptr == nullptr )
+			throw std::exception( "Can't get value of empty element." );
+
 		return m_node_ptr->val;
 	}
 
 	void operator ++ ()
 	{
-		assert( m_node_ptr != nullptr );
+		if( m_node_ptr == nullptr )
+			throw std::exception( "Can't iterate out of list boundary." );
+
 		m_node_ptr = m_node_ptr->next;
 	}
 
@@ -42,7 +47,9 @@ public:
 
 	void operator -- ()
 	{
-		assert( m_node_ptr != nullptr );
+		if( m_node_ptr == nullptr )
+			throw std::exception( "Can't iterate out of list boundary." );
+
 		m_node_ptr = m_node_ptr->prev;
 	}
 
@@ -83,8 +90,21 @@ class XList
 {
 public:
 
-	XList_iterator< T > Begin() const { return XList_iterator< T >( m_head ); }
-	XList_iterator< T > End() const { return XList_iterator< T >( m_end ); }
+	XList_iterator< T > Begin() const
+	{
+		if( m_head == nullptr )
+			throw std::exception( "Can't get iterator to first element from empty list." );
+
+		return XList_iterator< T >( m_head );
+	}
+
+	XList_iterator< T > End() const
+	{
+		if( m_end == nullptr )
+			throw std::exception( "Can't get iterator to last element from empty list." );
+
+		return XList_iterator< T >( m_end );
+	}
 
 	void PushBack( const T & elem )
 	{
@@ -120,7 +140,9 @@ public:
 
 	void PopBack()
 	{
-		assert( m_end != nullptr ); // для скорости работы не проверяем список на пустоту в release-версии
+		if( m_end == nullptr )
+			throw std::exception( "Can't delete last element from empty list." );
+
 		Element< T > * tmp = m_end->prev;
 		if( tmp != nullptr )
 			tmp->next = nullptr;
@@ -133,7 +155,9 @@ public:
 
 	void PopFront()
 	{
-		assert( m_end != nullptr );
+		if( m_head == nullptr )
+			throw std::exception( "Can't delete first element from empty list." );
+
 		Element< T > * tmp = m_head->next;
 		if(tmp != nullptr)
 			tmp->prev = nullptr;
@@ -181,13 +205,17 @@ public:
 
 	T & GetFirst() // неконстантная передача, чтобы была возможность изменять содержимое (но лучше для получения элементов использовать итераторы на начало/конец)
 	{
-		assert( m_head != nullptr );
+		if( m_head == nullptr )
+			throw std::exception( "Can't get first element from empty list." );
+
 		return m_head->val;
 	}
 
 	T & GetLast()
 	{
-		assert( m_end != nullptr );
+		if( m_end == nullptr )
+			throw std::exception( "Can't get last element from empty list." );
+
 		return m_end->val;
 	}
 
