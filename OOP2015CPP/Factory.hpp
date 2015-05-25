@@ -11,7 +11,7 @@ class ShapeCreatorInterface
 {
 public:
 
-    virtual Shape * create_random() const = 0;
+    virtual Shape * CreateRandom() const = 0;
 };
 
 
@@ -21,7 +21,7 @@ class ShapeCreator : public ShapeCreatorInterface
 {
 public:
 
-    virtual Shape * create_random() const
+    virtual Shape * CreateRandom() const
 	{
 		Shape * new_shape = new C();
 		new_shape->RandomizeParameters();
@@ -38,15 +38,15 @@ public:
 	// функци€ дл€ тестового задани€; по-хорошему, конкретные типы объектов добавл€ютс€ в фабрику извне
 	void Init()
 	{
-		add< Point >( "Point" );
-		add< Circle >( "Circle" );
-		add< Rect >( "Rect" );
-		add< Polyline >( "Polyline" );
-		add< Polygon >( "Polygon" );
+		Add< Point >( "Point" );
+		Add< Circle >( "Circle" );
+		Add< Rect >( "Rect" );
+		Add< Polyline >( "Polyline" );
+		Add< Polygon >( "Polygon" );
 	}
 
 	template < class C >
-    void add( const std::string & id )
+    void Add( const std::string & id )
     {
         FactoryMapIterator it = m_factory.find( id );
         if ( it == m_factory.end() ) {
@@ -55,15 +55,17 @@ public:
 		}
     }
 
-    Shape * create_random( const std::string & id )
+    Shape * CreateRandom( const std::string & id )
     {
         FactoryMapIterator it = m_factory.find( id );
         if ( it != m_factory.end() ) {
 			++m_counter[ id ];
-            return it->second->create_random();
+            return it->second->CreateRandom();
 		}
         return 0;
     }
+
+	int GetCounter( const std::string & id ) { return m_counter[ id ]; }
 
 	Factory() {}
 	~Factory() {}

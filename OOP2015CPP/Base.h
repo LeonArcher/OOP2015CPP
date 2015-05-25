@@ -8,6 +8,7 @@ class Named
 public:
 	
 	Named(std::string name = "Noname") : m_name( name ) {}
+	virtual ~Named() {}
 
 protected:
 

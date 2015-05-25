@@ -16,7 +16,13 @@ class Shape : virtual public Named
 {
 public:
 
+	Shape() { ++m_count; }
+	virtual ~Shape() { --m_count; }
+
 	static int GetCount() { return m_count; }
+
+	// этой функции тут быть не должно, но без нее вызывается функция RandomizeParameters, несмотря на обращение к Print через Printable*
+	virtual void Print( std::ostream & where = std::cout ) const = 0;
 
 	virtual void RandomizeParameters() = 0; // инициализируем все параметры случайными числами (допустимыми величинами)
 
@@ -35,8 +41,7 @@ class Point : public Shape, public Printable
 {
 public:
 
-	Point( float x = 0, float y = 0 ) : m_x( x ), m_y( y ) { ++m_count; }
-	~Point() { --m_count; }
+	Point( float x = 0, float y = 0 ) : m_x( x ), m_y( y ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
@@ -65,15 +70,7 @@ class Circle : public Shape, public Printable
 {
 public:
 
-	Circle( Point & center = Point(), float radius = 1.0f ) : m_center( center ), m_radius( radius ) { ++m_count; }
-	~Circle() { --m_count; }
-
-	virtual void Print( std::ostream & where = std::cout ) const
-	{
-		where << "Circle '" << m_name << "'\nCenter: (" << m_center.m_x << "; " << m_center.m_y << ")\n";
-		where << "Radius: " << m_radius << '\n';
-		where << "Square: " << M_PI * m_radius * m_radius << '\n';
-	}
+	Circle( Point & center = Point(), float radius = 1.0f ) : m_center( center ), m_radius( radius ) {}
 
 	virtual void RandomizeParameters()
 	{
@@ -81,6 +78,13 @@ public:
 		m_radius = distr( m_generator );
 
 		m_center.RandomizeParameters();
+	}
+
+	virtual void Print( std::ostream & where = std::cout ) const
+	{
+		where << "Circle '" << m_name << "'\nCenter: (" << m_center.m_x << "; " << m_center.m_y << ")\n";
+		where << "Radius: " << m_radius << '\n';
+		where << "Square: " << M_PI * m_radius * m_radius << '\n';
 	}
 
 private:
@@ -94,8 +98,7 @@ class Rect : public Shape, public Printable
 {
 public:
 
-	Rect( Point & point1 = Point( 0.0f, 0.0f ), Point & point2 = Point( 1.0f, 1.0f ) ) : m_p1( point1 ), m_p2( point2 ) { ++m_count; }
-	~Rect() { --m_count; }
+	Rect( Point & point1 = Point( 0.0f, 0.0f ), Point & point2 = Point( 1.0f, 1.0f ) ) : m_p1( point1 ), m_p2( point2 ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
@@ -129,8 +132,7 @@ class Polyline : public Shape, public Printable
 public:
 
 	Polyline() { ++m_count; };
-	Polyline( XList<Point> & coordinates ) : m_coords( coordinates ) { ++m_count; }
-	~Polyline() { --m_count; }
+	Polyline( XList<Point> & coordinates ) : m_coords( coordinates ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
@@ -183,8 +185,7 @@ class Polygon : public Shape, public Printable
 public:
 
 	Polygon() { ++m_count; };
-	Polygon( XList<Point> & coordinates ) : m_coords( coordinates ) { ++m_count; }
-	~Polygon() { --m_count; }
+	Polygon( XList<Point> & coordinates ) : m_coords( coordinates ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
 	{
