@@ -35,16 +35,6 @@ class Factory
 {
 public:
 
-	// функци€ дл€ тестового задани€; по-хорошему, конкретные типы объектов добавл€ютс€ в фабрику извне
-	void Init()
-	{
-		Add< Point >( "Point" );
-		Add< Circle >( "Circle" );
-		Add< Rect >( "Rect" );
-		Add< Polyline >( "Polyline" );
-		Add< Polygon >( "Polygon" );
-	}
-
 	template < class C >
     void Add( const std::string & id )
     {
