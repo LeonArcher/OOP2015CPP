@@ -6,7 +6,12 @@
 int main()
 {
 	Factory shape_factory;
-	shape_factory.Init();
+	
+	shape_factory.Add< Point >( "Point" );
+	shape_factory.Add< Circle >( "Circle" );
+	shape_factory.Add< Rect >( "Rect" );
+	shape_factory.Add< Polyline >( "Polyline" );
+	shape_factory.Add< Polygon >( "Polygon" );
 
 	XList< Shape * > figures;
 
@@ -20,23 +25,24 @@ int main()
 	figure_type[ 3 ] = "Polyline";
 	figure_type[ 4 ] = "Polygon";
 
-	for( int i = 0; i < 100; ++i )
+	for( int i = 0; i < 20; ++i )
 	{
 		figures.PushBack( shape_factory.CreateRandom( figure_type[ distr( generator ) ] ) );
 	}
 
-	std::cout << "Total figures created: " << Shape::GetCount() << '\n';
+	std::cout << "Total figures created (including subfigures): " << Shape::GetCount() << '\n';
 
 	for( int i = 0; i < 5; ++i )
 	{
-		std::cout << "Created figures '" << figure_type[ i ] << "': " << shape_factory.GetCounter( figure_type[ i ] ) << '\n';
+		std::cout << "Created figures via factory '" << figure_type[ i ] << "': " << shape_factory.GetCounter( figure_type[ i ] ) << '\n';
 	}
 
-	std::cout << "Detailed information about each figure:\n";
+	std::cout << "\nDetailed information about each figure:\n";
 
 	for( XList_iterator< Shape * > iter = figures.Begin(); iter != figures.End(); ++iter )
 	{
 		( ( Printable * )( *iter ) )->Print();
+		std::cout << '\n';
 	}
 
 	// очистка списка фигур
@@ -47,7 +53,7 @@ int main()
 	delete ( *figures.End() );
 	figures.Clear();
 
-	std::cout << "Figures count after erase: " << Shape::GetCount() << '\n';
+	std::cout << "Total figures count after erase (including subfigures): " << Shape::GetCount() << '\n';
 
 	return 0;
 }
