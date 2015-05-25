@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 
 #include "../OOP2015CPP/XList.hpp"
+#include "../OOP2015CPP/Factory.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -105,6 +106,55 @@ namespace UnitTests
 
 			Assert::AreEqual( test_list2.GetLength(), 0 );
 			Assert::AreEqual( test_list2.IsEmpty(), true );
+		}
+
+		TEST_METHOD(FactoryCreateDeleteTest)
+		{
+			// создаем одну точку, проверяем все счетчики до и после
+
+			Assert::AreEqual( Shape::GetCount(), 0 );
+
+			Factory shape_factory;
+			shape_factory.Init();
+
+			Shape * ptr = shape_factory.CreateRandom( "Point" );
+
+			Assert::AreEqual( Shape::GetCount(), 1 );
+			Assert::AreEqual( shape_factory.GetCounter( "Point" ), 1 );
+
+			delete ptr;
+
+			Assert::AreEqual( Shape::GetCount(), 0 );
+
+			// создаем массив случайных окружностей, проверяем счетчики
+
+			XList< Shape * > arr;
+
+			arr.PushBack( shape_factory.CreateRandom( "Circle" ) );
+			arr.PushBack( shape_factory.CreateRandom( "Circle" ) );
+			arr.PushBack( shape_factory.CreateRandom( "Circle" ) );
+			arr.PushBack( shape_factory.CreateRandom( "Circle" ) );
+
+			Assert::AreEqual( Shape::GetCount(), 8 ); // 4 фигуры - окружности, 4 фигуры - центры окружностей
+			Assert::AreEqual( shape_factory.GetCounter( "Circle" ), 4 );
+
+			for( int i = 0; i < 4; ++i ) {
+				delete *( arr.Begin() );
+				arr.PopFront();
+			}
+
+			Assert::AreEqual( arr.IsEmpty(), true );
+			Assert::AreEqual( Shape::GetCount(), 0 );
+
+			// создаем ломаную из случайного набора точек, проверяем счетчики
+
+			ptr = shape_factory.CreateRandom( "Polyline" );
+
+			Assert::AreEqual( shape_factory.GetCounter( "Polyline" ), 1 );
+
+			delete ptr;
+
+			Assert::AreEqual( Shape::GetCount(), 0 );
 		}
 
 	};
