@@ -124,6 +124,8 @@ public:
 		Element< T > * tmp = m_end->prev;
 		if( tmp != nullptr )
 			tmp->next = nullptr;
+		else
+			m_head = nullptr;
 
 		delete m_end;
 		m_end = tmp;
@@ -135,6 +137,8 @@ public:
 		Element< T > * tmp = m_head->next;
 		if(tmp != nullptr)
 			tmp->prev = nullptr;
+		else
+			m_end = nullptr;
 
 		delete m_head;
 		m_head = tmp;
@@ -169,6 +173,7 @@ public:
 			delete m_head;
 			m_head = tmp;
 		}
+		delete m_head;
 		
 		m_head = nullptr;
 		m_end = nullptr;
