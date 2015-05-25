@@ -17,6 +17,7 @@ class Shape : virtual public Named
 public:
 
 	Shape() { ++m_count; }
+	Shape( Shape & other ) { ++m_count; }
 	virtual ~Shape() { --m_count; }
 
 	static int GetCount() { return m_count; }
@@ -131,7 +132,7 @@ class Polyline : public Shape, public Printable
 {
 public:
 
-	Polyline() { ++m_count; };
+	Polyline() {}
 	Polyline( XList<Point> & coordinates ) : m_coords( coordinates ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
@@ -184,7 +185,7 @@ class Polygon : public Shape, public Printable
 {
 public:
 
-	Polygon() { ++m_count; };
+	Polygon() {}
 	Polygon( XList<Point> & coordinates ) : m_coords( coordinates ) {}
 
 	virtual void Print( std::ostream & where = std::cout ) const
